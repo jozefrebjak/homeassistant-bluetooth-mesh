@@ -1,0 +1,21 @@
+# Runs the prebuilt arm64 image from GHCR instead of compiling BlueZ on the Pi.
+#
+# On a Raspberry Pi 3B+ the local build takes hours; pulling takes minutes.
+#
+#   docker compose -f docker-compose.ghcr.yaml pull
+#   docker compose -f docker-compose.ghcr.yaml up -d
+#
+# The host must not run bluetoothd or bluetooth-meshd - the container starts its
+# own meshd and needs exclusive access to the controller:
+#
+#   systemctl disable --now bluetooth bluetooth-mesh
+version: "3.9"
+services:
+  app:
+    image: ghcr.io/jozefrebjak/homeassistant-bluetooth-mesh:latest
+    volumes:
+      - ./config:/config/
+    restart: "always"
+    network_mode: "host"
+    privileged: true
+    tty: true
