@@ -1,7 +1,10 @@
 version: "3.9"
 services:
   app:
-    build: .
+    # Build context is the repository root so the image carries this checkout.
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
     volumes:
       - ./config:/config/
     restart: "always"
